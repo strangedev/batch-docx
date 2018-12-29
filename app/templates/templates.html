@@ -1,0 +1,52 @@
+{% extends "base_nav.html" %}
+{% block body_content %}
+    <table class="table table-hover" id="templates-table">
+        <tr>
+            <th>Name</th>
+            <th>Hinzugefügt am</th>
+            <th>Zuletzt verwendet am</th>
+        </tr>
+        {% for id, name, date_added, date_last_used in templates %}
+            <tr class="clickable-row">
+                <td>
+                    <a href="template_detail?id={{ id }}" style="margin-right: 2em;">{{ name }}</a>
+                    <a href="duplicate_template?id={{ id }}" class="btn btn-default btn-hidden">
+                        <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
+                    </a>
+                    <button data-toggle="modal" data-target=".bs-example-modal-sm" class="btn btn-primary btn-hidden" onclick="(function () {
+                        $('#delete_template_id_input').val({{ id }})
+                    })();">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </button>
+                </td>
+                <td>{{ date_added }}</td>
+                <td>{{ date_last_used }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Vorlage endgültig löschen?</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Wird die Vorlage gelöscht, kann sie <i>nicht</i> wieder hergestellt werden.
+                    </p>
+                    <form action="delete_template" method="post">
+                        <input type="hidden" name="t_id" value="" id="delete_template_id_input">
+                        <button class="btn btn-danger btn-block">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            Löschen
+                            <input type="submit" title="Löschen" style="display: none !important;">
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

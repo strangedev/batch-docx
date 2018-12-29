@@ -1,0 +1,106 @@
+{% extends "base_nav.html" %}
+{% block body_content %}
+    <form action="save_mapping">
+        <input type="hidden" name="m_id" value="{{ mapping_id }}">
+        <div class="well-lg form-inline">
+            <h3>
+                <span style="padding-right: .5em">Zuweisung: </span>
+                <input class="form-control form" title="name" type="text" value="{{ name }}" name="name">
+            </h3>
+            <table class="table">
+                {% for attr_name, attr_val in attributes %}
+                    <tr>
+                        <td>{{ attr_name }}</td>
+                        <td>{{ attr_val }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <table class="table table-striped">
+            <tr>
+                <th>Wert in Vorlage</th>
+                <th>Wert in Datensatz</th>
+            </tr>
+            {% for template_attr, mapped_attr in mapping_items %}
+                <tr>
+                    <td>{{ template_attr }}</td>
+                    <td>
+                        <input class="form-control" type="text" name="map_{{ template_attr }}" title=""
+                               value="{{ mapped_attr }}">
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <table class="table table-striped" id="replacements">
+            <tr>
+                <th>
+                    <div class="btn btn-primary btn-xs" style="margin-right: 1em" onclick="add_tablerow('#replacements')">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    </div>
+                    Wert in Datensatz
+                </th>
+                <th>Ersetzen durch</th>
+            </tr>
+            {% for index, search_term, replace_term in replacements %}
+                <tr>
+                    <td>
+                        <input id="search_input" class="form-control" type="text" name="search_{{ index }}" title="" value="{{ search_term }}">
+                    </td>
+                    <td>
+                        <input id="replace_input" class="form-control" type="text" name="replace_{{ index }}" title="" value="{{ replace_term }}">
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <div class="btn-group">
+            <button class="btn btn-primary">
+                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                Änderungen speichern
+                <input title="Änderungen speichern" type="submit" style="display: none !important;">
+            </button>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".bs-example-modal-sm">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                Zuweisung löschen
+            </button>
+        </div>
+    </form>
+
+    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Zuweisung endgültig löschen?</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Wird die Zuweisung gelöscht, kann sie <i>nicht</i> wieder hergestellt werden.
+                    </p>
+                    <form action="remove_mapping" method="post">
+                        <input type="hidden" name="m_id" value="{{ mapping_id }}">
+                        <button class="btn btn-danger btn-block">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            Löschen
+                            <input type="submit" title="Löschen" style="display: none !important;">
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table style="display: none">
+    <tr id="replacement_entry" style="display: none">
+        <td>
+            <input id="search_input" class="form-control" type="text" name="search_" title="" value="">
+        </td>
+        <td>
+            <input id="replace_input" class="form-control" type="text" name="replace_" title="" value="">
+        </td>
+    </tr>
+    </table>
+
+{% endblock %}

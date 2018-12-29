@@ -1,0 +1,28 @@
+{% extends "base_nav.html" %}
+{% block body_content %}
+    <table class="table table-striped">
+        <tr>
+            <th>
+                <a class="btn btn-primary btn-xs" style="margin-right: 1em" href="new_user">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                </a>
+                Benutzer
+            </th>
+            <th>Rolle</th>
+        </tr>
+        {% for id, username, privilege in users %}
+            <tr>
+                <td>
+                    <a href="edit_user?u_id={{ id }}">{{ username }}</a>
+                </td>
+                <td>
+                    {% if privilege == 1 %}
+                        Administrator
+                    {% else %}
+                        Anwender
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

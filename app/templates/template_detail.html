@@ -1,0 +1,130 @@
+{% extends "base_nav.html" %}
+{% block body_content %}
+    <div class="well-lg">
+        <form class="form-inline" action="swap_template" enctype="multipart/form-data" method="post">
+            <input type="hidden" name="t_id" value="{{ template_id }}">
+            <h3>
+            <span class="btn-group" role="group"
+                  style="padding-top: 2%; padding-right: 1em">
+                <button type="submit" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true" style="margin-right: .5em"></span>
+                        Vorlage:
+                </button>
+                <!-- TODO: make name editable -->
+                <label id="file_input_label" class="btn btn-default btn-file">
+                        {{ name }}
+                        <input type="file" name="file" style="display: none !important;"/>
+                </label>
+                </span>
+            </h3>
+        </form>
+        <table class="table">
+            {% for attr_name, attr_val in attributes %}
+                <tr>
+                    <td>{{ attr_name }}</td>
+                    <td>{{ attr_val }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <table class="table table-striped">
+        <tr>
+            <th>
+                <a class="btn btn-primary btn-xs" style="margin-right: 1em" href="new_mapping?t_id={{ template_id }}">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                </a>
+                Zuweisung
+            </th>
+            <th>Hinzugefügt am</th>
+            <th>Zuletzt verwendet am</th>
+            <th></th><!--Verwenden-->
+        </tr>
+        {% for id, name, date_added, date_last_used in mappings %}
+            <tr>
+                <td>
+                    <a href="edit_mapping?m_id={{ id }}">{{ name }}</a>
+                </td>
+                <td>{{ date_added }}</td>
+                <td>{{ date_last_used }}</td>
+                <td style="text-align: right">
+
+                    <form class="form-inline" action="mangle" enctype="multipart/form-data" method="post">
+                        <input type="hidden" name="t_id" value="{{ template_id }}">
+                        <input type="hidden" name="m_id" value="{{ id }}">
+                        <div class="btn-group btn-group-sm" role="group"
+                             style="padding-top: 2%; padding-right: 1em">
+                            <label id="file_input_label" class="btn btn-default btn-file">
+                                Datensätze auswählen...
+                                <input type="file" name="file" style="display: none !important;"/>
+                            </label>
+                            <button type="submit" class="btn btn-primary" onclick="showSpinner()">
+                                <span class="glyphicon glyphicon-duplicate" aria-hidden="true"
+                                      style="margin-right: .5em"></span>
+                                Serienbrief erzeugen
+                            </button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <table class="table table-striped" style="margin-top: 3em">
+        <tr>
+            <th>
+                <a class="btn btn-primary btn-xs" style="margin-right: 1em"
+                   data-toggle="modal"
+                   data-target=".bs-example-modal-sm">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                </a>
+                Freigegebene Benutzer
+            </th>
+            <th></th> <!-- Remove -->
+        </tr>
+        {% for id, name in granted_users %}
+            <tr>
+                <td>{{ name }}</td>
+                <td align="right">
+                    <a class="btn btn-primary btn-xs" href="revoke_access?t_id={{ template_id }}&u_id={{ id }}">
+                        Nicht mehr freigeben
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Benutzer auswählen...</h4>
+                </div>
+                <div class="modal-body">
+                    <table>
+                        <tr>
+                            <th>Benutzer</th>
+                            <th style="padding-left: 3em"></th> <!-- Add -->
+                        </tr>
+                        {% for id, name in users %}
+                            <tr>
+                                <td>
+                                    {{ name }}
+                                </td>
+                                <td style="padding-left: 3em">
+                                    <a href="grant_access?t_id={{ template_id }}&u_id={{ id }}">
+                                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                                        Freigeben
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading_spinner"></div>
+{% endblock %}

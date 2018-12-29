@@ -1,0 +1,32 @@
+{% extends "base_nav.html" %}
+{% block body_content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <h3>Benutzer hinzufügen:</h3>
+                <hr/>
+                <form action="register_user" method="post">
+                    <div class="form-group-lg">
+                        <label for="id_username">Benutzername:</label>
+                        <input class="form-control" required id="id_username" title="Benutzername" type="text"
+                               name="username" placeholder="z.B. Vetrieb">
+                        <label for="id_password">Passwort:</label>
+                        <input class="form-control" required id="id_password" title="Passwort" type="password"
+                               name="password" placeholder="z.B. gandalf1">
+                        <label for="id_privilege">Rolle</label>
+                        <select class="form-control" id="id_privilege" name="privilege">
+                            <option value="0">Anwender</option>
+                            <option value="1">Administrator</option>
+                        </select>
+                        <hr/>
+                        <button class="btn btn-primary btn-block">
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                            Hinzufügen
+                            <input type="submit" title="Löschen" style="display: none !important;">
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

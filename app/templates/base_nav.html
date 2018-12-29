@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!--link rel="icon" href="../../favicon.ico"-->
+    <title>Serienbrief - Login</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/bootstrap/css/bootstrap.simplex.min.css" rel="stylesheet">
+    <link href="static/bootstrap/css/custom.css" rel="stylesheet">
+
+    <!--link href="../static/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet"-->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="static/bootstrap/js/jquery.min.js"></script>
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+
+        function showSpinner() {
+            $("body").addClass("loading");
+        }
+
+        $(document).on('change', ':file', function () {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.parent().contents()[0].nodeValue = label;
+        });
+
+        $(document).ready(function() {
+            $('#templates-table').on('click', '.clickable-row', function(e) {
+                if($(this).hasClass('bg-danger')){
+                    $(this).find('.btn-hidden').removeClass('shown');
+                    $(this).removeClass('bg-danger');
+
+                } else {
+                    $(this).addClass('bg-danger').siblings().removeClass('bg-danger');
+                    $(this).find('.btn-hidden').addClass('shown');
+                    $(this).siblings().find('.btn-hidden').removeClass('shown');
+                }
+            });
+        });
+
+
+        function add_tablerow(table_id) {
+
+            var last_tr = table_id + " tr:last";
+            var search_input = last_tr + " #search_input";
+            var replace_input = last_tr + " #replace_input";
+            var next_index = $(table_id).find('tr').length;
+
+            var new_row = $("#replacement_entry").clone();
+            $(last_tr).after(new_row);
+            $(last_tr).show();
+
+            $(search_input).attr("name", $(search_input).attr("name") + next_index);
+            $(replace_input).attr("name", $(replace_input).attr("name") + next_index);
+
+            $(search_input).attr("value", "");
+            $(replace_input).attr("value", "");
+        }
+
+    </script>
+
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <span class="glyphicon glyphicon-send" aria-hidden="true" style="margin-right: 1em"></span>
+                HerSo Serienbriefe
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li {% if page == "templates" %} class="active" {% endif %}><a href="templates">Vorlagen</a></li>
+                <li {% if page == "users" %} class="active" {% endif %}><a href="users">Benutzer</a></li>
+            </ul>
+
+            <ul class="nav navbar-right">
+                <li>
+                    <form class="form-inline" action="upload" enctype="multipart/form-data" method="post">
+                        <div class="btn-group btn-group-sm" role="group"
+                             style="padding-top: 2%; padding-right: 1em">
+                            <label id="file_input_label" class="btn btn-default btn-file">
+                                Vorlage auswählen...
+                                <input type="file" name="file" style="display: none !important;"/>
+                            </label>
+                            <button type="submit" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-upload" aria-hidden="true"
+                                      style="margin-right: .5em"></span>
+                                Hochladen
+                            </button>
+                        </div>
+                    </form>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div style="padding-left: 2em; padding-right: 2em; padding-top: 70px; padding-bottom: 70px">
+    {% block body_content %}
+    {% endblock %}
+</div>
+<nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav" style="padding-top: .6em">
+            <li>
+                Angemeldet als: <i>{{ current_username }}</i>
+            </li>
+        </ul>
+        <ul class="nav navbar-right" style="padding-top: .3em; padding-right: 1em">
+            <li>
+                <form action="logout" method="post">
+                    <button class="btn btn-sm btn-primary">
+                        <input type="submit" style="display: none !important;">
+                        Ausloggen
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>
