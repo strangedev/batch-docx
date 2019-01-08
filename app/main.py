@@ -212,33 +212,18 @@ def show_edit_mapping():
 
 @app.route("/save_mapping")
 def do_save_mapping():
-    m_id = request.args.get("m_id")
+    # fetch mapping
+    m_id = request.json["id"]
     mapping = ManglerMapping(m_id)
 
-    for arg_name in request.args.keys():
-        if not arg_name.startswith("map_"):
-            continue
+    # update mapping
+    mapping.replace_mappings(request.json["map"])
+   
+    # update replacements
+    mapping.replace_replacements(request.json['replace'])
 
-        map_name_template = arg_name[4:]
-        map_name_databatch = request.args.get(arg_name)
-
-        mapping.set_mapping(map_name_template, map_name_databatch)
-
-    mapping.replace_replacements(dict())
-
-    for arg_name in request.args.keys():
-        if not arg_name.startswith("search_"):
-            continue
-
-        arg_index = arg_name.split("_")[1]
-        search_term = request.args.get(arg_name)
-        replace_term = request.args.get("replace_{}".format(arg_index))
-
-        mapping.set_replacement(search_term, replace_term)
-
-    mapping.name = request.args.get("name")
-
-    return redirect("template_detail?id={}".format(mapping.template_id))
+    # update name of this mapping
+    mapping.name = request.json["name"]
 
 
 @app.route("/mangle", methods=["POST"])
