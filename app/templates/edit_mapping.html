@@ -118,12 +118,12 @@
             var replacementTable = document.getElementById("replacements");
 
             // populate payload
-            for (var i = 0, row; row =  mappingTable.rows[i]; i++) {
+            for (var i = 1, row; row =  mappingTable.rows[i]; i++) {
                 var mappingKey = row.cells[0].innerHTML;
                 var mappingValue = row.cells[1].firstElementChild.value;
                 payload.map[mappingKey] = mappingValue;
             }
-            for (var i = 0, row; row =  replacementTable.rows[i]; i++) {
+            for (var i = 1, row; row =  replacementTable.rows[i]; i++) {
                 var replacementKey = row.cells[0].firstElementChild.value;
                 var replacementValue = row.cells[1].firstElementChild.value;
                 payload.replace[replacementKey] = replacementValue;
