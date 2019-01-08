@@ -225,6 +225,8 @@ def do_save_mapping():
     # update name of this mapping
     mapping.name = request.json["name"]
 
+    return "Success."
+
 
 @app.route("/mangle", methods=["POST"])
 def do_mangle():
