@@ -7,7 +7,10 @@ class SyntaxNode():
 
 def intersperse(iterable, delimiter):
     it = iter(iterable)
-    yield next(it)
+    try:
+        yield next(it)
+    except StopIteration:
+        yield iterable
     for x in it:
         yield delimiter
         yield x
