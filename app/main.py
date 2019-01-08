@@ -210,7 +210,7 @@ def show_edit_mapping():
     )
 
 
-@app.route("/save_mapping")
+@app.route("/save_mapping", methods=["POST"])
 def do_save_mapping():
     # fetch mapping
     m_id = request.json["id"]
