@@ -1,14 +1,20 @@
 import csv
+import chardet
 
 
 class Databatch(object):
 
-    def __init__(self, path, encoding="utf-8-sig"):
+    def __init__(self, path):
 
         self.__entries = dict({})
         self.__row_count = 0
+        self.__encoding="utf-8-sig"
 
-        with open(path, 'r+', encoding=encoding) as f:  # sometimes a leading blank line is injected
+        with open(path, 'rb') as f:
+            chardet_result = chardet.detect(f.read())
+            self.__encoding = chardet_result['encoding']
+
+        with open(path, 'r+', encoding=self.__encoding) as f:  # sometimes a leading blank line is injected
             lines = f.readlines()
             stripped_lines = []
             body = False
@@ -24,7 +30,7 @@ class Databatch(object):
             f.writelines(stripped_lines)
 
 
-        with open(path, encoding=encoding) as f:
+        with open(path, encoding=self.__encoding) as f:
             reader = csv.reader(f)
 
             first_flag = True
